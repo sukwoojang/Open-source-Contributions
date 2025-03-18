@@ -4,7 +4,7 @@
 - Hugging Face의 `transformers` 라이브러리에 Pull Request 제출
 - GPT-2 모델에서 발생하던 **어텐션 마스크(Attention Mask) 관련 버그 수정**
 - 최신 PyTorch SDPA(Scaled Dot Product Attention) 연산 적용 과정에서 발생한 **차원 변형 문제 해결**
-- Issue 링크: [https://github.com/huggingface/transformers/issues/35290]
+- [Issue 링크](https://github.com/huggingface/transformers/issues/35290)
 
 ### 🔹 2. 문제 정의
 - GPT-2 모델에서 `attention_mask`를 4D 텐서로 전달했지만, 내부적으로 2D로 변형되는 문제가 발생
