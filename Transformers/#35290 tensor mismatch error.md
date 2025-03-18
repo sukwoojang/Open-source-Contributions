@@ -8,14 +8,14 @@
 
 ### 🔹 2. 문제 정의
 - GPT-2 모델에서 `attention_mask`를 4D 텐서로 전달했지만, 내부적으로 2D로 변형되는 문제가 발생
-- 모델이 `_prepare_4d_causal_attention_mask_for_sdpa()` 함수를 호출하면서, `attention_mask = None`으로 변경됨
+- 모델이 `_prepare_4d_causal_attention_mask_for_sdpa()` 함수를 호출하면서 차원 조건에 의해 `to_4d()` 함수가 실행 됨
 - 이로 인해 **출력 차원이 예상과 다르게 변형되어, 모델이 오류를 발생**시킴
 
 ### 🔹 3. 해결 과정
 1️⃣ **이슈 분석**
    - 실제 실행 환경에서 **`attention_mask`의 차원이 4D → 2D로 변형되는 과정**을 디버깅  
    - GPT2Model 내부 `forward()`에서 `attention_mask.view(batch_size, -1)` 연산을 수행하면서 문제가 발생  
-   - `_prepare_4d_causal_attention_mask_for_sdpa()` 내부 'to_4d()' 함수가 잘못 호출되어 `attention_mask` 차원이 의도와 다르게 변형되는 부분 발견  
+   - `_prepare_4d_causal_attention_mask_for_sdpa()` 내부 `to_4d()` 함수가 잘못 호출되어 `attention_mask` 차원이 의도와 다르게 변형되는 부분 발견  
 
 2️⃣ **해결 방법**
    - `attention_mask.view(batch_size, -1)`가 실행되기 전, `attention_mask.dim() == 2`인지 확인하는 조건 추가  
